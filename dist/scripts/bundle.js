@@ -50495,7 +50495,6 @@ module.exports=AuthorForm;
 "use strict";
 
 var React=require('react');
-//var AuthorApi=require('../../api/authorApi');
 var AuthorAction=require('../../actions/authorAction');
 var AuthorStore=require('../../stores/authorStore');
 var AuthorList=require('./AuthorList');
@@ -50525,8 +50524,6 @@ module.exports=Authors;
 
 var React=require('react');
 var AuthorForm=require('./authorForm');
-//Replacing AuthorApi with author store and author action
-//var AuthorApi=require('../../api/authorApi');
 var AuthorAction=require('../../actions/authorAction');
 var AuthorStore=require('../../stores/authorStore');
 var Router=require('react-router');
@@ -50575,6 +50572,7 @@ var ManageAuthorPage=React.createClass({displayName: "ManageAuthorPage",
         }
         //AuthorApi.saveAuthor(this.state.author);
         AuthorAction.createAuthor(this.state.author);
+        this.setState({dirty:false});
         Toastr.success('Author Saved.');
         this.transitionTo('authors');
     },
@@ -50656,6 +50654,7 @@ module.exports=PageNotFound;
 
 },{"react":202,"react-router":33}],217:[function(require,module,exports){
 "use strict";
+
 var keyMirror=require('react/lib/keyMirror');
 
 module.exports=keyMirror({
@@ -50666,7 +50665,7 @@ module.exports=keyMirror({
 },{"react/lib/keyMirror":187}],218:[function(require,module,exports){
 var Dispatcher=require('flux').Dispatcher;
 
-module.exports=new Dispatcher;
+module.exports=new Dispatcher();
 
 },{"flux":2}],219:[function(require,module,exports){
 "use strict";
@@ -50675,6 +50674,7 @@ var Router=require('react-router');
 var routes=require('./routes');
 var InitializeAction=require('./actions/initializeAction');
 
+//Initial App Data
 InitializeAction.initApp();
 
 Router.run(routes,function(Handler){
@@ -50712,30 +50712,30 @@ var assign=require('object-assign');
 var _ =require('lodash');
 
 var _authors=[];
+var CHANGE_EVENT='change';
 
 var AuthorStore=assign({},EventEmitter.prototype,{  //this is like extending the EventEmitter class to 
    addChangeListener:function(callback){            //communicate Controllers, We add three event listner methods
-        this.on('change',callback);                 //that Controllers use and notify store whenever the change 
+        this.on(CHANGE_EVENT,callback);                 //that Controllers use and notify store whenever the change 
    },                                               //event is occure.
    removeChangeListener:function(callback){
-        this.removeListener('change',callback);
+        this.removeListener(CHANGE_EVENT,callback);
    },
    emitChange:function(){
-       this.emit('change');
+       this.emit(CHANGE_EVENT);
    },
    getAllAuthors:function(){
        return _authors;
    },
    getAuthorById:function(){
        return _.find(_authors,{id:id});
-   }
+   }                
 });
 
 //we need to register the store with Dispatcher, So It's notified when actions occure.  
 Dispatcher.register(function(action){
     switch(action.ActionTypes){
         case ActionTypes.INITIALIZE:
-            console.log('testing..1');
             _authors=action.initialData.authors;
             AuthorStore.emitChange();
             break;

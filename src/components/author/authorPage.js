@@ -1,7 +1,6 @@
 "use strict";
 
 var React=require('react');
-//var AuthorApi=require('../../api/authorApi');
 var AuthorAction=require('../../actions/authorAction');
 var AuthorStore=require('../../stores/authorStore');
 var AuthorList=require('./AuthorList');

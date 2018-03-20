@@ -2,8 +2,6 @@
 
 var React=require('react');
 var AuthorForm=require('./authorForm');
-//Replacing AuthorApi with author store and author action
-//var AuthorApi=require('../../api/authorApi');
 var AuthorAction=require('../../actions/authorAction');
 var AuthorStore=require('../../stores/authorStore');
 var Router=require('react-router');
@@ -52,6 +50,7 @@ var ManageAuthorPage=React.createClass({
         }
         //AuthorApi.saveAuthor(this.state.author);
         AuthorAction.createAuthor(this.state.author);
+        this.setState({dirty:false});
         Toastr.success('Author Saved.');
         this.transitionTo('authors');
     },

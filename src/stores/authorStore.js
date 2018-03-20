@@ -7,23 +7,24 @@ var assign=require('object-assign');
 var _ =require('lodash');
 
 var _authors=[];
+var CHANGE_EVENT='change';
 
 var AuthorStore=assign({},EventEmitter.prototype,{  //this is like extending the EventEmitter class to 
    addChangeListener:function(callback){            //communicate Controllers, We add three event listner methods
-        this.on('change',callback);                 //that Controllers use and notify store whenever the change 
+        this.on(CHANGE_EVENT,callback);                 //that Controllers use and notify store whenever the change 
    },                                               //event is occure.
    removeChangeListener:function(callback){
-        this.removeListener('change',callback);
+        this.removeListener(CHANGE_EVENT,callback);
    },
    emitChange:function(){
-       this.emit('change');
+       this.emit(CHANGE_EVENT);
    },
    getAllAuthors:function(){
        return _authors;
    },
    getAuthorById:function(){
        return _.find(_authors,{id:id});
-   }
+   }                
 });
 
 //we need to register the store with Dispatcher, So It's notified when actions occure.  
